@@ -20,6 +20,8 @@ import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.video.MediaStoreOutputOptions
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
@@ -52,24 +54,25 @@ class VideoService(private val context: Context,
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
 
+            val recorder = Recorder.Builder()
+                .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
+                .build()
+            videoCapture = VideoCapture.withOutput(recorder)
+/*
             val imageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
                         Log.d(TAG, "Average luminosity: $luma")
                     })
-                }
-
-
+                }*/
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
 
                 cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview, imageAnalyzer)
-
-
+                    lifecycleOwner, cameraSelector, preview, videoCapture)
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
@@ -80,8 +83,11 @@ class VideoService(private val context: Context,
 
     fun startRecording(){
         val videoCapture = this.videoCapture ?: return
+        Log.w("String","isRecording: $isRecording")
 
         if(!isRecording){
+            Log.w("String","startRecording3")
+
             val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
                 .format(System.currentTimeMillis())
             val contentValues = ContentValues().apply {
@@ -129,11 +135,13 @@ class VideoService(private val context: Context,
                         }
                     }
                 }
+            isRecording = true
         }
     }
 
     // Stop the current recording
     fun stopRecording(){
+        Log.w("String","stopRecording")
         if(isRecording){
             recording?.stop()
             recording = null
@@ -146,6 +154,7 @@ class VideoService(private val context: Context,
     }
 
     fun getIsRecording(): Boolean {
+        Log.w("String","isRecording: $isRecording")
         return isRecording
     }
 
