@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/image_capture_button"
+                android:id="@+id/back_button"
                 android:backgroundTint="@drawable/button"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
