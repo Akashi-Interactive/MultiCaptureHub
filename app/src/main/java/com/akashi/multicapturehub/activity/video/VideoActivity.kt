@@ -1,6 +1,7 @@
 package com.akashi.multicapturehub.activity.video
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.akashi.multicapturehub.R
+import com.akashi.multicapturehub.activity.gallery.GalleryActivity
 import com.akashi.multicapturehub.service.video.VideoService
 import com.akashi.multicapturehub.databinding.ActivityVideoBinding
 
@@ -24,8 +26,14 @@ class VideoActivity : AppCompatActivity(){
         viewBinding = ActivityVideoBinding.inflate(layoutInflater)
         videoService = VideoService(this, viewBinding, this)
 
-        //setContentView(R.layout.activity_video)
         setContentView(viewBinding.root)
+
+        val backButton: Button = findViewById(R.id.back_button)
+        backButton.setOnClickListener {
+            videoService.stopRecording()
+            val intent = Intent(this, GalleryActivity::class.java)
+            startActivity(intent)
+        }
 
         if(allPermissionsGranted()){
             videoService.startCamera()
