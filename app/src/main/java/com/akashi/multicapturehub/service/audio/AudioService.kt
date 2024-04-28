@@ -1,6 +1,6 @@
 package com.akashi.multicapturehub.service.audio
 
-import com.akashi.multicapturehub.Song
+import com.akashi.multicapturehub.elements.Song
 import android.content.Context
 import android.media.MediaRecorder
 import java.io.File
