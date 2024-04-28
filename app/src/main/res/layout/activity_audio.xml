@@ -2,16 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/MainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.video.VideoActivity">
-
+    tools:context=".activity.">
     <LinearLayout
         android:id="@+id/VerticalLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@drawable/gradient_a"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,61 +18,56 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/SuperiorLayout"
-            android:background="@drawable/gradient_a"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="111dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ViewLayout"
-            android:layout_width="match_parent"
-            android:layout_height="585dp">
-
-            <androidx.camera.view.PreviewView
-                android:id="@+id/viewFinder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <TextView
+                android:id="@+id/audio_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/record_audio"
+                android:textAlignment="center"
+                android:textSize="48sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </androidx.camera.view.PreviewView>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/InferiorLayout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/gradient_a">
+            android:layout_height="618dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/audio_capture_button"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="264dp"
+                android:layout_marginBottom="264dp"
                 android:elevation="2dp"
                 android:text="@string/start_capture"
+                android:background="@drawable/button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_capture_button"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/image_capture_button"
-                android:backgroundTint="@drawable/button"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="264dp"
+                android:layout_marginBottom="264dp"
+                android:background="@drawable/button"
                 android:elevation="2dp"
                 android:text="@string/back_to_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/audio_capture_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

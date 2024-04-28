@@ -35,7 +35,7 @@ class VideoActivity : AppCompatActivity(){
             )
         }
 
-        videoCaptureButton = findViewById(R.id.video_capture_button)
+        videoCaptureButton = findViewById(R.id.audio_capture_button)
 
         videoCaptureButton.setOnClickListener {
                 toggleRecording()

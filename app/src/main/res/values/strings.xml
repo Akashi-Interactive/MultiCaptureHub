@@ -4,4 +4,5 @@
     <string name="start_capture">Start</string>
     <string name="stop_capture">Stop</string>
     <string name="back_to_menu">Back</string>
+    <string name="record_audio">Record Audio</string>
 </resources>
