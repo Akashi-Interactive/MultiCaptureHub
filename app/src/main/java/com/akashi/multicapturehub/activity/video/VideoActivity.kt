@@ -6,65 +6,88 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.akashi.multicapturehub.R
 import com.akashi.multicapturehub.service.video.VideoService
+import com.akashi.multicapturehub.databinding.ActivityVideoBinding
+
 
 class VideoActivity : AppCompatActivity(){
+    private lateinit var viewBinding: ActivityVideoBinding
     private lateinit var videoService: VideoService
-    private lateinit var video_capture_button: Button
+    private lateinit var videoCaptureButton: Button
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video)
+        viewBinding = ActivityVideoBinding.inflate(layoutInflater)
+        videoService = VideoService(this, viewBinding, this)
 
-        videoService = VideoService(this)
-        video_capture_button = findViewById(R.id.video_capture_button)
+        //setContentView(R.layout.activity_video)
+        setContentView(viewBinding.root)
 
-        video_capture_button.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ),
-                    PERMISSION_REQUEST_CODE
-                )
-            } else {
+        if(allPermissionsGranted()){
+            videoService.startCamera()
+        } else {
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
+        }
+
+        videoCaptureButton = findViewById(R.id.video_capture_button)
+
+        videoCaptureButton.setOnClickListener {
                 toggleRecording()
-            }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun toggleRecording() {
         if (videoService.getIsRecording()) {
             videoService.stopRecording()
             Toast.makeText(this, "Video saved: ${videoService.getVideoFilePath()}", Toast.LENGTH_SHORT).show()
-            video_capture_button.text = getString(R.string.start_capture)
+            videoCaptureButton.text = getString(R.string.start_capture)
         } else {
             videoService.startRecording()
-            video_capture_button.text = getString(R.string.stop_capture)
+            videoCaptureButton.text = getString(R.string.stop_capture)
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
+                videoService.startCamera()
+            } else {
+                Toast.makeText(this,
+                    "Permissions not granted by the user.",
+                    Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onDestroy() {
+        videoService.onDestroy()
+        super.onDestroy()
+    }
+
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 123
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS =
+            mutableListOf (
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            ).apply {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+            }.toTypedArray()
     }
 }
