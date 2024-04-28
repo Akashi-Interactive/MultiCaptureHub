@@ -7,4 +7,6 @@
     <string name="audioimage">AudioImage</string>
     <string name="audio_record_button">audio record button</string>
     <string name="video_record_button">video record button</string>
+    <string name="videoIcon">videoIcon</string>
+    <string name="play">Play</string>
 </resources>
