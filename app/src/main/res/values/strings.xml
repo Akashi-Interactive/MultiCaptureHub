@@ -9,4 +9,6 @@
     <string name="video_record_button">video record button</string>
     <string name="videoIcon">videoIcon</string>
     <string name="play">Play</string>
+    <string name="record_audio">Audio Record</string>
+    <string name="recording_status">Recording status</string>
 </resources>

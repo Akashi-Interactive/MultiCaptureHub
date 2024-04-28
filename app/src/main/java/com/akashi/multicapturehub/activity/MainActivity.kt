@@ -1,4 +1,4 @@
-package com.akashi.multicapturehub
+package com.akashi.multicapturehub.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

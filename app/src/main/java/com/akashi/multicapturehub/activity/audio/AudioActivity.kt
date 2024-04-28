@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -15,6 +16,7 @@ class AudioActivity :AppCompatActivity() {
     private lateinit var audioService: AudioService
     private lateinit var toggleButton: Button
     private lateinit var backButton: Button
+    private lateinit var audioStatusImage: ImageView
 
     // During activity creation
     override fun onCreate(savedInstanceState: Bundle?){
@@ -26,6 +28,7 @@ class AudioActivity :AppCompatActivity() {
 
         toggleButton = findViewById(R.id.audio_capture_button) // Look for toggle button
         backButton = findViewById(R.id.back_audio_button) // Look for back button
+        audioStatusImage = findViewById(R.id.image_status) // Look for audio status image
 
         if(!allPermissionsGranted()){ // If not all permissions are granted
             ActivityCompat.requestPermissions( // Request permissions
@@ -50,9 +53,11 @@ class AudioActivity :AppCompatActivity() {
         // If currently recording an audio
         if(audioService.getIsRecording()){
             audioService.stopRecording() // Stop the current record
+            audioStatusImage.setImageResource(R.drawable.audio_record_off) // Change image to off
             toggleButton.text = getString(R.string.start_capture) // Change text for toggle button
         } else { // If not recording audio
             audioService.startRecording() // Start new record
+            audioStatusImage.setImageResource(R.drawable.audio_record_on) // Change image to on
             toggleButton.text = getString(R.string.stop_capture) // Change text for toggle button
         }
     }
@@ -63,9 +68,15 @@ class AudioActivity :AppCompatActivity() {
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    // On destroy of activity
+    override fun onDestroy() {
+        super.onDestroy()
+        audioService.onStop()
+    }
+
     // Constants
     companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 10
+        private const val REQUEST_CODE_PERMISSIONS = 200
         private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.RECORD_AUDIO)
     }
 }
